@@ -1,0 +1,832 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Anemia Detection & Health Monitoring</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <!-- Loading Screen -->
+    <div id="loading-screen" class="loading-screen">
+        <div class="loading-content">
+            <div class="loading-logo">
+                <i class="fas fa-stethoscope"></i>
+            </div>
+            <h1>Suraksha-AI</h1>
+            <p>AI-powered anemia screening for better health outcomes</p>
+            <div class="loading-spinner"></div>
+        </div>
+    </div>
+
+    <!-- Auth Screen -->
+    <div id="auth-screen" class="screen hidden">
+        <div class="auth-container">
+            <!-- Header -->
+            <div class="auth-header">
+                <div class="logo-container">
+                    <div class="logo-icon">
+                        <i class="fas fa-stethoscope"></i>
+                    </div>
+                    <h1 class="logo-text">Suraksha-AI</h1>
+                </div>
+                <p class="header-subtitle">AI-powered anemia screening with real-time health monitoring</p>
+            </div>
+
+            <!-- Auth Form -->
+            <div class="form-container">
+                <div class="form-header">
+                    <h2 id="form-title">Welcome Back</h2>
+                    <p id="form-subtitle">Sign in to continue your health journey</p>
+                </div>
+
+                <form id="auth-form" class="auth-form">
+                    <!-- Full Name (Register only) -->
+                    <div id="fullname-field" class="input-container hidden">
+                        <div class="input-icon">
+                            <i class="fas fa-user"></i>
+                        </div>
+                        <input type="text" id="fullname" placeholder="Full Name" autocomplete="name">
+                    </div>
+
+                    <!-- Email -->
+                    <div class="input-container">
+                        <div class="input-icon">
+                            <i class="fas fa-envelope"></i>
+                        </div>
+                        <input type="email" id="email" placeholder="Email Address" required autocomplete="email">
+                    </div>
+
+                    <!-- Password -->
+                    <div class="input-container">
+                        <div class="input-icon">
+                            <i class="fas fa-lock"></i>
+                        </div>
+                        <input type="password" id="password" placeholder="Password" required autocomplete="current-password">
+                        <button type="button" class="eye-icon" id="toggle-password">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                    </div>
+
+                    <!-- Confirm Password (Register only) -->
+                    <div id="confirm-password-field" class="input-container hidden">
+                        <div class="input-icon">
+                            <i class="fas fa-lock"></i>
+                        </div>
+                        <input type="password" id="confirm-password" placeholder="Confirm Password" autocomplete="new-password">
+                        <button type="button" class="eye-icon" id="toggle-confirm-password">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                    </div>
+
+                    <!-- Forgot Password (Login only) -->
+                    <div id="forgot-password" class="forgot-password">
+                        <a href="#" onclick="showForgotPassword()">Forgot Password?</a>
+                    </div>
+
+                    <!-- Submit Button -->
+                    <button type="submit" class="submit-button" id="submit-btn">
+                        <span id="submit-text">Sign In</span>
+                        <i class="fas fa-arrow-right"></i>
+                    </button>
+
+                    <!-- Toggle Auth Mode -->
+                    <div class="toggle-container">
+                        <span id="toggle-text">Don't have an account? </span>
+                        <a href="#" id="toggle-link" onclick="toggleAuthMode()">Sign Up</a>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Features Preview -->
+            <div class="features-container">
+                <h3 class="features-title">Why Choose AnemiaDetect?</h3>
+                <div class="features-list">
+                    <div class="feature-item">
+                        <div class="feature-icon">
+                            <i class="fas fa-heart"></i>
+                        </div>
+                        <span class="feature-text">AI-powered anemia detection</span>
+                    </div>
+                    <div class="feature-item">
+                        <div class="feature-icon">
+                            <i class="fas fa-bluetooth"></i>
+                        </div>
+                        <span class="feature-text">mPatch real-time monitoring</span>
+                    </div>
+                    <div class="feature-item">
+                        <div class="feature-icon">
+                            <i class="fas fa-hospital"></i>
+                        </div>
+                        <span class="feature-text">Emergency hospital contact</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Demo Access -->
+            <div class="demo-container">
+                <button class="demo-button" onclick="continueAsGuest()">Continue as Guest</button>
+                <p class="demo-note">Explore the app without creating an account</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main App -->
+    <div id="main-app" class="screen hidden">
+        <!-- Navigation -->
+        <nav class="bottom-nav">
+            <button class="nav-item active" data-tab="detection" onclick="switchTab('detection')">
+                <i class="fas fa-camera"></i>
+                <span>Detection</span>
+            </button>
+            <button class="nav-item" data-tab="dashboard" onclick="switchTab('dashboard')">
+                <i class="fas fa-chart-line"></i>
+                <span>Dashboard</span>
+            </button>
+            <button class="nav-item" data-tab="mpatch" onclick="switchTab('mpatch')">
+                <i class="fas fa-bluetooth"></i>
+                <span>mPatch</span>
+            </button>
+            <button class="nav-item" data-tab="reports" onclick="switchTab('reports')">
+                <i class="fas fa-file-medical"></i>
+                <span>Reports</span>
+            </button>
+            <button class="nav-item" data-tab="profile" onclick="switchTab('profile')">
+                <i class="fas fa-user"></i>
+                <span>Profile</span>
+            </button>
+        </nav>
+
+        <!-- Tab Content -->
+        <div class="tab-content">
+            <!-- Detection Tab -->
+            <div id="detection-tab" class="tab-pane active">
+                <div class="tab-header">
+                    <h1>Anemia Detection</h1>
+                    <p>AI-powered early screening</p>
+                </div>
+
+                <div class="content-container">
+                    <!-- Language Selector -->
+                    <div class="section">
+                       
+                        <div class="language-buttons">
+                            <button class="language-button active" data-lang="en" onclick="selectLanguage('en')">English</button>
+                            <button class="language-button" data-lang="hi" onclick="selectLanguage('hi')">हिंदी</button>
+                            
+                        </div>
+                    </div>
+
+                    <!-- Body Part Selection -->
+                    <div class="section">
+                        <h3 class="section-title">Select Body Part for Analysis</h3>
+                        <div class="body-part-buttons">
+                            <button class="body-part-button" data-part="nail" onclick="selectBodyPart('nail')">
+                                <span class="body-part-emoji">💅</span>
+                                <span class="body-part-text">Fingernail</span>
+                            </button>
+                            <button class="body-part-button" data-part="eye" onclick="selectBodyPart('eye')">
+                                <span class="body-part-emoji">👁️</span>
+                                <span class="body-part-text">Eye (Conjunctiva)</span>
+                            </button>
+                            <button class="body-part-button" data-part="tongue" onclick="selectBodyPart('tongue')">
+                                <span class="body-part-emoji">👅</span>
+                                <span class="body-part-text">Tongue</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Instructions -->
+                    <div id="instructions-card" class="instructions-card hidden">
+                        <div class="instructions-header">
+                            <i class="fas fa-info-circle"></i>
+                            <h4>Capture Instructions</h4>
+                            <button class="speak-button" onclick="speakInstructions()">
+                                <i class="fas fa-volume-up"></i>
+                            </button>
+                        </div>
+                        <p id="instructions-text"></p>
+                    </div>
+
+                    <!-- Image Upload -->
+                    <div class="section">
+                        <h3 class="section-title">Capture or Upload Image</h3>
+                        <div class="image-actions">
+                            <button class="action-button primary" onclick="takePhoto()">
+                                <i class="fas fa-camera"></i>
+                                <span>Take Photo</span>
+                            </button>
+                            <button class="action-button secondary" onclick="uploadImage()">
+                                <i class="fas fa-upload"></i>
+                                <span>Upload Image</span>
+                            </button>
+                        </div>
+                        <input type="file" id="image-input" accept="image/*" style="display: none;" onchange="handleImageUpload(event)">
+                    </div>
+
+                    <!-- Image Preview -->
+                    <div id="image-preview" class="image-preview hidden">
+                        <h3 class="section-title">Selected Image</h3>
+                        <img id="preview-image" class="preview-image" alt="Selected image">
+                        <button id="analyze-button" class="analyze-button" onclick="analyzeImage()" disabled>
+                            <i class="fas fa-search"></i>
+                            <span>Analyze for Anemia</span>
+                        </button>
+                    </div>
+
+                    <!-- Analysis Results -->
+                    <div id="analysis-results" class="results-card hidden">
+                        <div class="results-header">
+                            <h3>Analysis Results</h3>
+                            <span id="analysis-time"></span>
+                        </div>
+                        <div id="results-content"></div>
+                    </div>
+
+                    <!-- Loading State -->
+                    <div id="analysis-loading" class="loading-card hidden">
+                        <div class="loading-spinner"></div>
+                        <h3>Analyzing Image...</h3>
+                        <p>Our AI is examining the image for signs of anemia</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Dashboard Tab -->
+            <div id="dashboard-tab" class="tab-pane">
+                <div class="tab-header">
+                    <h1>Dashboard</h1>
+                    <p>Your health insights</p>
+                </div>
+
+                <div class="content-container">
+                    <!-- Stats Cards -->
+                    <div class="stats-container">
+                        <div class="stat-card">
+                            <div class="stat-icon">
+                                <i class="fas fa-tint"></i>
+                            </div>
+                            <div class="stat-value" id="avg-hemoglobin">12.5</div>
+                            <div class="stat-label">Avg Hemoglobin (g/dL)</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon">
+                                <i class="fas fa-heartbeat"></i>
+                            </div>
+                            <div class="stat-value" id="total-scans">0</div>
+                            <div class="stat-label">Total Scans</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon">
+                                <i class="fas fa-check-circle"></i>
+                            </div>
+                            <div class="stat-value" id="normal-results">0</div>
+                            <div class="stat-label">Normal Results</div>
+                        </div>
+                    </div>
+
+                    <!-- Recent Scans -->
+                    <div class="section">
+                        <h3 class="section-title">Recent Scans</h3>
+                        <div id="recent-scans" class="recent-scans">
+                            <div class="empty-state">
+                                <i class="fas fa-camera"></i>
+                                <p>No scans yet. Start by analyzing an image!</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Health Tips -->
+                    <div class="section">
+                        <h3 class="section-title">Health Tips</h3>
+                        <div class="tips-card">
+                            <div class="tip-item">
+                                <span class="tip-emoji">🥬</span>
+                                <span class="tip-text">Include iron-rich foods like spinach, lentils, and lean meat</span>
+                            </div>
+                            <div class="tip-item">
+                                <span class="tip-emoji">🍊</span>
+                                <span class="tip-text">Consume vitamin C with iron-rich meals for better absorption</span>
+                            </div>
+                            <div class="tip-item">
+                                <span class="tip-emoji">💊</span>
+                                <span class="tip-text">Take supplements only as prescribed by your healthcare provider</span>
+                            </div>
+                            <div class="tip-item">
+                                <span class="tip-emoji">🚶‍♀️</span>
+                                <span class="tip-text">Regular exercise can help improve circulation and overall health</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- mPatch Tab -->
+            <div id="mpatch-tab" class="tab-pane">
+                <div class="tab-header">
+                    <h1>mPatch Monitor</h1>
+                    <p>Real-time health monitoring</p>
+                </div>
+            
+                <div class="content-container">
+                    <!-- Connection Status -->
+                    <div class="section">
+                        <div id="mpatch-status" class="mpatch-status disconnected">
+                            <div class="status-indicator">
+                                <div class="status-dot"></div>
+                                <span class="status-text">mPatch Disconnected</span>
+                            </div>
+                            <div class="battery-level hidden">
+                                <i class="fas fa-battery-three-quarters"></i>
+                                <span id="battery-percentage">94%</span>
+                            </div>
+                        </div>
+                    </div>
+            
+                    <!-- Connection Controls -->
+                    <div class="section">
+                        <div id="connection-controls">
+                            <button id="scan-devices-btn" class="action-button primary" onclick="scanForDevices()">
+                                <i class="fas fa-search"></i>
+                                <span>Scan for mPatch Devices</span>
+                            </button>
+                            <button id="disconnect-btn" class="action-button danger hidden" onclick="disconnectDevice()">
+                                <i class="fas fa-unlink"></i>
+                                <span>Disconnect Device</span>
+                            </button>
+                        </div>
+                    </div>
+            
+                    <!-- Available Devices -->
+                    <div id="available-devices" class="section hidden">
+                        <h3 class="section-title">Available Devices</h3>
+                        <div id="devices-list" class="devices-list"></div>
+                    </div>
+            
+                    <!-- Real-time Vital Signs -->
+                    <div id="vital-signs-section" class="section hidden">
+                        <h3 class="section-title">Real-time Vital Signs</h3>
+                        <div class="vital-signs-grid">
+                            <div class="vital-card heart-rate">
+                                <div class="vital-icon">
+                                    <i class="fas fa-heartbeat"></i>
+                                </div>
+                                <div class="vital-value" id="heart-rate">--</div>
+                                <div class="vital-unit">BPM</div>
+                                <div class="vital-label">Heart Rate</div>
+                                <div class="vital-status" id="hr-status">Normal</div>
+                            </div>
+                            <div class="vital-card spo2">
+                                <div class="vital-icon">
+                                    <i class="fas fa-lungs"></i>
+                                </div>
+                                <div class="vital-value" id="spo2">--</div>
+                                <div class="vital-unit">%</div>
+                                <div class="vital-label">SpO2</div>
+                                <div class="vital-status" id="spo2-status">Normal</div>
+                            </div>
+                            <div class="vital-card temperature">
+                                <div class="vital-icon">
+                                    <i class="fas fa-thermometer-half"></i>
+                                </div>
+                                <div class="vital-value" id="temperature">--</div>
+                                <div class="vital-unit">°F</div>
+                                <div class="vital-label">Temperature</div>
+                                <div class="vital-status" id="temp-status">Normal</div>
+                            </div>
+                            <div class="vital-card blood-pressure">
+                                <div class="vital-icon">
+                                    <i class="fas fa-tachometer-alt"></i>
+                                </div>
+                                <div class="vital-value" id="blood-pressure">--/--</div>
+                                <div class="vital-unit">mmHg</div>
+                                <div class="vital-label">Blood Pressure</div>
+                                <div class="vital-status" id="bp-status">Normal</div>
+                            </div>
+                        </div>
+                    </div>
+            
+                   
+            
+                    <!-- Connection Tips -->
+                    <div class="section">
+                        <h3 class="section-title">Connection Tips</h3>
+                        <div class="tips-card">
+                            <div class="tip-item">
+                                <span class="tip-emoji">📱</span>
+                                <span class="tip-text">Keep your device close to the mPatch during pairing</span>
+                            </div>
+                            <div class="tip-item">
+                                <span class="tip-emoji">🔋</span>
+                                <span class="tip-text">Ensure your mPatch has sufficient battery charge</span>
+                            </div>
+                            <div class="tip-item">
+                                <span class="tip-emoji">🔵</span>
+                                <span class="tip-text">Enable Bluetooth and location services</span>
+                            </div>
+                            <div class="tip-item">
+                                <span class="tip-emoji">🔄</span>
+                                <span class="tip-text">Restart the app if connection issues persist</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+           
+
+            <!-- Reports Tab -->
+            <div id="reports-tab" class="tab-pane">
+                <div class="tab-header">
+                    <h1>Health Reports</h1>
+                    <p>Track your anemia journey</p>
+                </div>
+
+                <div class="content-container">
+                    <!-- Reports Summary -->
+                    <div class="section">
+                        <div class="section-header">
+                            <h3 class="section-title">Report History</h3>
+                            <button class="export-button" onclick="exportReports()">
+                                <i class="fas fa-download"></i>
+                                <span>Export</span>
+                            </button>
+                        </div>
+                        <div id="reports-list" class="reports-list">
+                            <div class="empty-state">
+                                <i class="fas fa-file-medical"></i>
+                                <p>No reports available yet. Start by analyzing an image!</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Profile Tab -->
+            <div id="profile-tab" class="tab-pane">
+                <div class="tab-header">
+                    <h1>Profile</h1>
+                    <p>Manage your account and health information</p>
+                </div>
+
+                <div class="content-container">
+                    <!-- Profile Header -->
+                    <div class="profile-header">
+                        <div class="profile-avatar">
+                            <i class="fas fa-user"></i>
+                        </div>
+                        <div class="profile-info">
+                            <h2 id="profile-name">Guest User</h2>
+                            <p id="profile-details">28 years • Female • O+</p>
+                            <p id="profile-email">guest@example.com</p>
+                        </div>
+                        <button class="edit-button" onclick="editProfile()">
+                            <i class="fas fa-edit"></i>
+                        </button>
+                    </div>
+
+                    <!-- Emergency Contact -->
+                    <div class="section">
+                        <h3 class="section-title">Emergency Actions</h3>
+                        <div class="emergency-actions">
+                            <button class="emergency-button" onclick="callEmergency()">
+                                <i class="fas fa-phone"></i>
+                                <div class="emergency-text">
+                                    <span class="emergency-title">Emergency Call</span>
+                                    <span class="emergency-subtitle">Call 911 immediately</span>
+                                </div>
+                            </button>
+                            <button class="emergency-button" onclick="findNearestHospital()">
+                                <i class="fas fa-hospital"></i>
+                                <div class="emergency-text">
+                                    <span class="emergency-title">Nearest Hospital</span>
+                                    <span class="emergency-subtitle">Find nearby medical facilities</span>
+                                </div>
+                            </button>
+                            <button class="emergency-button" onclick="contactEmergencyContact()">
+                                <i class="fas fa-user-friends"></i>
+                                <div class="emergency-text">
+                                    <span class="emergency-title">Emergency Contact</span>
+                                    <span class="emergency-subtitle">Call your emergency contact</span>
+                                </div>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Health Summary -->
+                    <div class="section">
+                        <h3 class="section-title">Health Overview</h3>
+                        <div class="health-stats">
+                            <div class="health-stat">
+                                <i class="fas fa-heart"></i>
+                                <div class="health-stat-content">
+                                    <span class="health-stat-label">Last Hb Level</span>
+                                    <span class="health-stat-value" id="last-hb">12.5 g/dL</span>
+                                </div>
+                            </div>
+                            <div class="health-stat">
+                                <i class="fas fa-calendar"></i>
+                                <div class="health-stat-content">
+                                    <span class="health-stat-label">Last Scan</span>
+                                    <span class="health-stat-value" id="last-scan">Never</span>
+                                </div>
+                            </div>
+                            <div class="health-stat">
+                                <i class="fas fa-bluetooth"></i>
+                                <div class="health-stat-content">
+                                    <span class="health-stat-label">mPatch Status</span>
+                                    <span class="health-stat-value" id="mpatch-connection-status">Disconnected</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Medical Information -->
+                    <div class="section">
+                        <h3 class="section-title">Medical Information</h3>
+                        <div class="medical-info-card">
+                            <div class="medical-row">
+                                <span class="medical-label">Blood Type:</span>
+                                <span class="medical-value" id="blood-type">O+</span>
+                            </div>
+                            <div class="medical-row">
+                                <span class="medical-label">Height:</span>
+                                <span class="medical-value" id="height">162 cm</span>
+                            </div>
+                            <div class="medical-row">
+                                <span class="medical-label">Weight:</span>
+                                <span class="medical-value" id="weight">58 kg</span>
+                            </div>
+                            <div class="medical-row">
+                                <span class="medical-label">BMI:</span>
+                                <span class="medical-value" id="bmi">22.1</span>
+                            </div>
+                            <div class="medical-row">
+                                <span class="medical-label">Allergies:</span>
+                                <span class="medical-value" id="allergies">None known</span>
+                            </div>
+                            <div class="medical-row">
+                                <span class="medical-label">Current Medications:</span>
+                                <span class="medical-value" id="medications">Iron supplements</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Emergency Contact Info -->
+                    <div class="section">
+                        <h3 class="section-title">Emergency Contact</h3>
+                        <div class="emergency-contact-card">
+                            <div class="contact-header">
+                                <div class="contact-avatar">
+                                    <i class="fas fa-user"></i>
+                                </div>
+                                <div class="contact-info">
+                                    <h4 id="emergency-contact-name">Raj Sharma</h4>
+                                    <p id="emergency-contact-relation">Spouse</p>
+                                </div>
+                            </div>
+                            <div class="contact-details">
+                                <div class="contact-item">
+                                    <i class="fas fa-phone"></i>
+                                    <span id="emergency-contact-phone">+91 9876543210</span>
+                                </div>
+                                <div class="contact-item">
+                                    <i class="fas fa-envelope"></i>
+                                    <span id="emergency-contact-email">raj.sharma@email.com</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Settings -->
+                    <div class="section">
+                        <h3 class="section-title">Settings</h3>
+                        <div class="settings-list">
+                            <div class="setting-item">
+                                <div class="setting-info">
+                                    <i class="fas fa-bell"></i>
+                                    <div>
+                                        <span class="setting-title">Notifications</span>
+                                        <span class="setting-subtitle">Health reminders and alerts</span>
+                                    </div>
+                                </div>
+                                <label class="switch">
+                                    <input type="checkbox" id="notifications-toggle" checked>
+                                    <span class="slider"></span>
+                                </label>
+                            </div>
+                            <div class="setting-item">
+                                <div class="setting-info">
+                                    <i class="fas fa-shield-alt"></i>
+                                    <div>
+                                        <span class="setting-title">Data Privacy</span>
+                                        <span class="setting-subtitle">Control how your data is used</span>
+                                    </div>
+                                </div>
+                                <label class="switch">
+                                    <input type="checkbox" id="privacy-toggle">
+                                    <span class="slider"></span>
+                                </label>
+                            </div>
+                            <div class="setting-item">
+                                <div class="setting-info">
+                                    <i class="fas fa-bluetooth"></i>
+                                    <div>
+                                        <span class="setting-title">Auto-connect mPatch</span>
+                                        <span class="setting-subtitle">Automatically connect to known devices</span>
+                                    </div>
+                                </div>
+                                <label class="switch">
+                                    <input type="checkbox" id="auto-connect-toggle" checked>
+                                    <span class="slider"></span>
+                                </label>
+                            </div>
+                            <div class="setting-item">
+                                <div class="setting-info">
+                                    <i class="fas fa-exclamation-triangle"></i>
+                                    <div>
+                                        <span class="setting-title">Emergency Alerts</span>
+                                        <span class="setting-subtitle">Automatic emergency notifications</span>
+                                    </div>
+                                </div>
+                                <label class="switch">
+                                    <input type="checkbox" id="emergency-alerts-toggle" checked>
+                                    <span class="slider"></span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Support -->
+                    <div class="section">
+                        <h3 class="section-title">Support & Help</h3>
+                        <div class="support-list">
+                            <button class="support-item" onclick="showHelp()">
+                                <i class="fas fa-question-circle"></i>
+                                <div>
+                                    <span class="support-title">Help Center</span>
+                                    <span class="support-subtitle">FAQs and user guide</span>
+                                </div>
+                                <i class="fas fa-chevron-right"></i>
+                            </button>
+                            <button class="support-item" onclick="contactSupport()">
+                                <i class="fas fa-headset"></i>
+                                <div>
+                                    <span class="support-title">Contact Support</span>
+                                    <span class="support-subtitle">Get help from our team</span>
+                                </div>
+                                <i class="fas fa-chevron-right"></i>
+                            </button>
+                            <button class="support-item" onclick="showMedicalDisclaimer()">
+                                <i class="fas fa-info-circle"></i>
+                                <div>
+                                    <span class="support-title">Medical Disclaimer</span>
+                                    <span class="support-subtitle">Important health information</span>
+                                </div>
+                                <i class="fas fa-chevron-right"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Logout -->
+                    <div class="section">
+                        <button class="logout-button" onclick="logout()">
+                            <i class="fas fa-sign-out-alt"></i>
+                            <span>Logout</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit Profile Modal -->
+    <div id="edit-profile-modal" class="modal hidden">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Edit Profile</h3>
+                <button class="close-button" onclick="closeEditProfile()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="edit-profile-form">
+                    <div class="form-section">
+                        <h4>Personal Information</h4>
+                        <div class="form-group">
+                            <label for="edit-name">Full Name</label>
+                            <input type="text" id="edit-name" placeholder="Enter your full name">
+                        </div>
+                        <div class="form-group">
+                            <label for="edit-email">Email</label>
+                            <input type="email" id="edit-email" placeholder="Enter your email">
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="edit-age">Age</label>
+                                <input type="number" id="edit-age" placeholder="Age">
+                            </div>
+                            <div class="form-group">
+                                <label for="edit-gender">Gender</label>
+                                <select id="edit-gender">
+                                    <option value="female">Female</option>
+                                    <option value="male">Male</option>
+                                    <option value="other">Other</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-section">
+                        <h4>Medical Information</h4>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="edit-blood-type">Blood Type</label>
+                                <select id="edit-blood-type">
+                                    <option value="O+">O+</option>
+                                    <option value="O-">O-</option>
+                                    <option value="A+">A+</option>
+                                    <option value="A-">A-</option>
+                                    <option value="B+">B+</option>
+                                    <option value="B-">B-</option>
+                                    <option value="AB+">AB+</option>
+                                    <option value="AB-">AB-</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="edit-height">Height (cm)</label>
+                                <input type="number" id="edit-height" placeholder="Height">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="edit-weight">Weight (kg)</label>
+                            <input type="number" id="edit-weight" placeholder="Weight">
+                        </div>
+                        <div class="form-group">
+                            <label for="edit-allergies">Allergies</label>
+                            <textarea id="edit-allergies" placeholder="List any known allergies"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="edit-medications">Current Medications</label>
+                            <textarea id="edit-medications" placeholder="List current medications"></textarea>
+                        </div>
+                    </div>
+
+                    <div class="form-section">
+                        <h4>Emergency Contact</h4>
+                        <div class="form-group">
+                            <label for="edit-emergency-name">Contact Name</label>
+                            <input type="text" id="edit-emergency-name" placeholder="Emergency contact name">
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="edit-emergency-phone">Phone Number</label>
+                                <input type="tel" id="edit-emergency-phone" placeholder="Phone number">
+                            </div>
+                            <div class="form-group">
+                                <label for="edit-emergency-relation">Relationship</label>
+                                <input type="text" id="edit-emergency-relation" placeholder="Relationship">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="edit-emergency-email">Email</label>
+                            <input type="email" id="edit-emergency-email" placeholder="Emergency contact email">
+                        </div>
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="button" class="cancel-button" onclick="closeEditProfile()">Cancel</button>
+                        <button type="submit" class="save-button">Save Changes</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Hospital Finder Modal -->
+    <div id="hospital-finder-modal" class="modal hidden">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Nearest Hospitals</h3>
+                <button class="close-button" onclick="closeHospitalFinder()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div id="location-status" class="location-status">
+                    <i class="fas fa-spinner fa-spin"></i>
+                    <span>Finding your location...</span>
+                </div>
+                <div id="hospitals-list" class="hospitals-list hidden"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notifications -->
+    <div id="toast-container" class="toast-container"></div>
+
+    <script src="script.js"></script>
+</body>
+</html>
