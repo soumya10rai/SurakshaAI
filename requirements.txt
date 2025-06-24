@@ -4,3 +4,5 @@ opencv-python
 scikit-learn
 joblib
 pillow
+flask_cors
+
